@@ -1,8 +1,15 @@
 # Aplicación de Productos Financieros
 
 ## Descripción
-Esta aplicación permite visualizar, buscar, agregar, editar y eliminar productos financieros de un banco mediante una interfaz web y consumo de servicios REST locales.  
-La maquetación y diseño siguen los lineamientos de los diseños **D1**, **D2**, **D3** y **D4**.
+Esta aplicación permite visualizar, buscar, agregar, editar y eliminar productos financieros de un banco mediante una interfaz web y consumo de servicios REST locales.
+
+## 🛠️ Herramientas y tecnologías utilizadas
+
+- **Framework:** Angular 17 (Angular 14 o superior)
+- **Lenguaje:** TypeScript 5.4 (TypeScript 4.8 o superior)
+- **Testing:** Pruebas unitarias con Jest
+- **Control de versiones:** Git
+- **Repositorio:** GitHub (público)
 
 ---
 
