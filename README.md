@@ -22,7 +22,7 @@ La maquetación y diseño siguen los lineamientos de los diseños **D1**, **D2**
 - Maquetación según diseño **D1**.
 
 ### F4. Agregar producto
-- Botón “Agregar” que navega al formulario de registro.
+- Botón **Agregar** que navega al formulario de registro.
 - Formulario con botones **Agregar** y **Reiniciar**.
 - Validaciones de campos:
   - **Id:** requerido, 3-10 caracteres, único (verificación vía servicio).
@@ -70,9 +70,12 @@ La maquetación y diseño siguen los lineamientos de los diseños **D1**, **D2**
 
 ## Servicios API
 
-- **URL Base:** `http://localhost:3002`
+**URL Base:** `http://localhost:3002`
 
-### Obtener productos financieros
+---
+
+```markdown
+### 1. Obtener productos financieros
 - **URL:** `/bp/products`  
 - **Método:** `GET`  
 - **Ejemplo de respuesta:**
@@ -89,73 +92,4 @@ La maquetación y diseño siguen los lineamientos de los diseños **D1**, **D2**
     }
   ]
 }
-Crear producto financiero
-URL: /bp/products
 
-Método: POST
-
-Body de ejemplo:
-
-{
-  "id": "dos",
-  "name": "Nombre producto",
-  "description": "Descripción producto",
-  "logo": "assets-1.png",
-  "date_release": "2025-01-01",
-  "date_revision": "2025-01-01"
-}
-Respuesta exitosa (200):
-
-{
-  "message": "Product added successfully",
-  "data": {
-    "id": "dos",
-    "name": "Nombre producto",
-    "description": "Descripción producto",
-    "logo": "assets-1.png",
-    "date_release": "2025-01-01",
-    "date_revision": "2025-01-01"
-  }
-}
-Actualizar producto financiero
-URL: /bp/products/:id
-
-Método: PUT
-
-Body de ejemplo:
-
-{
-  "name": "Nombre actualizado",
-  "description": "Descripción producto",
-  "logo": "assets-1.png",
-  "date_release": "2025-01-01",
-  "date_revision": "2025-01-01"
-}
-Respuesta exitosa (200):
-
-{
-  "message": "Product updated successfully",
-  "data": {
-    "name": "Nombre actualizado",
-    "description": "Descripción producto",
-    "logo": "assets-1.png",
-    "date_release": "2025-01-01",
-    "date_revision": "2025-01-01"
-  }
-}
-Eliminar producto financiero
-URL: /bp/products/:id
-
-Método: DELETE
-
-Respuesta exitosa (200):
-
-{
-  "message": "Product removed successfully"
-}
-Verificación de existencia de ID
-URL: /bp/products/verification/:id
-
-Método: GET
-
-Respuesta: true si existe, false si no.
