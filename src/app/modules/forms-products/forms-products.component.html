@@ -1,0 +1,239 @@
+<div class="container">
+    <div class="header-container">
+        <!-- Input de búsqueda a la izquierda -->
+        <input type="text" class="search-input" placeholder="Buscar productos..." (input)="onSearchInput($event)"
+            (keyup.enter)="performSearch()" (blur)="performSearch()">
+
+        <!-- Botón a la derecha -->
+        <button class="btn-add" (click)="openModal()" aria-label="Agregar producto">
+            Agregar
+        </button>
+    </div>
+
+
+    <!-- Table -->
+    <div class="table-container scrollable">
+        <table class="products-table">
+            <thead>
+                <tr>
+                    <th>Logo</th>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Fecha de liberación</th>
+                    <th>Fecha de reestructuración</th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @if (isLoading) {
+                @for (row of skeletonRows; track row) {
+                <tr class="skeleton-row" aria-hidden="true">
+                    <td class="logo-cell">
+                        <div class="skeleton skeleton-avatar"></div>
+                    </td>
+                    <td class="nombre-cell">
+                        <div class="skeleton skeleton-text"></div>
+                    </td>
+                    <td class="descripcion-cell">
+                        <div class="skeleton skeleton-text"></div>
+                        <div class="skeleton skeleton-text short"></div>
+                    </td>
+                    <td class="fecha-cell">
+                        <div class="skeleton skeleton-text date"></div>
+                    </td>
+                    <td class="fecha-cell">
+                        <div class="skeleton skeleton-text date"></div>
+                    </td>
+                    <td class="actions-cell">
+                        <div class="skeleton skeleton-kebab"></div>
+                    </td>
+                </tr>
+                }
+                } @else {
+                @for (product of paginatedProducts; track product.productId) {
+                <tr>
+                    <td class="logo-cell">
+                        <img [src]="product.logo" [alt]="product.nombre" class="product-logo"
+                            (error)="setDefaultImage($event)">
+                    </td>
+
+                    <td class="nombre-cell">
+                        <div class="descripcion-scroll">{{ product.nombre }}</div>
+                    </td>
+                    <td class="descripcion-cell">
+                        <div class="descripcion-scroll">{{ product.descripcion }}</div>
+                    </td>
+                    <td class="fecha-cell">{{ formatDateForTable(product.fechaLiberacion) }}</td>
+                    <td class="fecha-cell">{{ formatDateForTable(product.fechaReestructuracion) }}</td>
+
+                    <td class="actions-cell">
+                        <div class="kebab-container">
+                            <button class="kebab-btn" (click)="toggleMenu(product.productId, $event)"
+                                aria-label="Opciones">
+                                &#8942;
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                } @empty {
+                <tr>
+                    <td colspan="6" class="no-results">No se encontraron productos</td>
+                </tr>
+                }
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    <!-- Pagination Section -->
+    @if (hasResults) {
+    <div class="pagination-container">
+
+        <!-- Info de resultados y selección de cantidad -->
+        <div class="pagination-top">
+            <div class="pagination-info">
+                {{ filteredProducts.length }} Resultados
+            </div>
+
+            <div class="pagination-select">
+                <select class="page-size-select" [(ngModel)]="itemsPerPage" (change)="onItemsPerPageChange()">
+                    <option [ngValue]="5">5</option>
+                    <option [ngValue]="10">10</option>
+                    <option [ngValue]="20">20</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    }
+
+
+    <!-- Delete Confirmation Modal -->
+    @if (showDeleteModal && productToDelete) {
+    <div class="modal-overlay" role="dialog" aria-modal="true" (click)="closeDeleteModalOnOverlay($event)">
+        <div class="modal-content modal-delete">
+
+            <section class="modal-body">
+                <div class="delete-warning">
+                    <p class="warning-message">
+                        ¿Estás seguro de que quieres eliminar el producto <strong>"{{ productToDelete.nombre
+                            }}"</strong>?
+                    </p>
+                </div>
+            </section>
+
+            <footer class="modal-footer">
+                <button class="btn-cancel" (click)="closeDeleteModal()">Cancelar</button>
+                <button class="btn-save" [disabled]="isSaving" (click)="confirmDelete()">
+                    @if (isSaving) {
+                    <div class="loading-spinner"></div> Eliminando...
+                    } @else {
+                    Confirmar
+                    }
+                </button>
+            </footer>
+        </div>
+    </div>
+    }
+
+    <!-- Modal -->
+    @if (showModal) {
+    <div class="modal-overlay" role="dialog" aria-modal="true" (click)="closeModalOnOverlay($event)">
+        <div class="modal-content">
+            <header class="modal-header">
+                <h3>Formulario de Registro</h3>
+                <button class="modal-close" (click)="closeModal()">&times;</button>
+            </header>
+
+            <section class="modal-body">
+                <div class="form-row">
+                    <!-- Fila 1: ID y Nombre -->
+                    <div class="form-group" [class.has-error]="productIdError">
+                        <label for="productId">ID *</label>
+                        <input id="productId" class="form-input" [(ngModel)]="newProduct.productId"
+                            [readonly]="isEditing">
+                        @if (productIdError) {
+                        <div class="error-message">{{ productIdError }}</div>
+                        }
+                    </div>
+
+                    <div class="form-group" [class.has-error]="nombreError">
+                        <label for="nombre">Nombre</label>
+                        <input id="nombre" class="form-input" [(ngModel)]="newProduct.nombre">
+                        @if (nombreError) {
+                        <div class="error-message">{{ nombreError }}</div>
+                        }
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <!-- Fila 2: Descripción y Logo -->
+                    <div class="form-group descripcion-col" [class.has-error]="descripcionError">
+                        <label for="descripcion">Descripción</label>
+                        <input id="descripcion" type="text" class="form-input" [(ngModel)]="newProduct.descripcion">
+                        @if (descripcionError) {
+                        <div class="error-message">{{ descripcionError }}</div>
+                        }
+                    </div>
+                    <div class="form-group" [class.has-error]="logoError">
+                        <label for="logo">Logo</label>
+                        <input id="logo" type="text" class="form-input" [(ngModel)]="newProduct.logo">
+                        @if (logoError) {
+                        <div class="error-message">{{ logoError }}</div>
+                        }
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group" [class.has-error]="fechaLiberacionError">
+                        <label>Fecha liberación *</label>
+                        <input type="date" class="form-input" [(ngModel)]="newProduct.fechaLiberacion"
+                            (ngModelChange)="onFechaLiberacionChange($event)">
+                        @if (fechaLiberacionError) {
+                        <div class="error-message">{{ fechaLiberacionError }}</div>
+                        }
+                    </div>
+
+                    <div class="form-group" [class.has-error]="fechaRevisionError">
+                        <label>Fecha revisión</label>
+                        <input type="date" class="form-input disabled-input"
+                            [(ngModel)]="newProduct.fechaReestructuracion" [disabled]="true">
+                        @if (fechaRevisionError) {
+                        <div class="error-message">{{ fechaRevisionError }}</div>
+                        }
+                    </div>
+                </div>
+
+            </section>
+
+            <footer class="modal-footer">
+                <button class="btn-cancel" (click)="resetForm()">Reiniciar</button>
+                <button class="btn-save" [disabled]="!isFormValid || isSaving" (click)="saveProduct()">
+                    @if (isSaving) { Guardando... } @else { Guardar }
+                </button>
+
+            </footer>
+        </div>
+    </div>
+    }
+
+    <!-- Toast -->
+    @if (toastMessage) {
+    <div class="toast" [class.error]="toastType === 'error'" [class.success]="toastType === 'success'">
+        {{ toastMessage }}
+    </div>
+    }
+
+    <!-- Global Kebab Menu -->
+    @if (openMenuId) {
+    <div class="global-kebab-menu" [style.top.px]="menuPosition.top" [style.left.px]="menuPosition.left">
+        <button class="kebab-item" (click)="editProduct(getCurrentProduct())">
+            Editar
+        </button>
+        <button class="kebab-item danger" (click)="deleteProduct(getCurrentProduct())">
+            Eliminar
+        </button>
+    </div>
+    }
+</div>
