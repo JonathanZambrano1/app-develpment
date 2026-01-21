@@ -74,12 +74,12 @@ La maquetación y diseño siguen los lineamientos de los diseños **D1**, **D2**
 
 ---
 
-```markdown
 ### 1. Obtener productos financieros
 - **URL:** `/bp/products`  
 - **Método:** `GET`  
 - **Ejemplo de respuesta:**
-```json
+
+```markdown
 {
   "data": [
     {
@@ -93,3 +93,21 @@ La maquetación y diseño siguen los lineamientos de los diseños **D1**, **D2**
   ]
 }
 
+### 1. Obtener productos financieros
+- **URL:** `/bp/products`  
+- **Método:** `GET`  
+- **Ejemplo de respuesta:**
+
+```markdown
+{
+  "data": [
+    {
+      "id": "uno",
+      "name": "Nombre producto",
+      "description": "Descripción producto",
+      "logo": "assets-1.png",
+      "date_release": "2025-01-01",
+      "date_revision": "2025-01-01"
+    }
+  ]
+}
