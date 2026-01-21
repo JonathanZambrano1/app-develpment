@@ -78,8 +78,7 @@ La maquetación y diseño siguen los lineamientos de los diseños **D1**, **D2**
 - **URL:** `/bp/products`  
 - **Método:** `GET`  
 - **Ejemplo de respuesta:**
-
-```markdown
+```json
 {
   "data": [
     {
@@ -92,22 +91,72 @@ La maquetación y diseño siguen los lineamientos de los diseños **D1**, **D2**
     }
   ]
 }
+```
 
-### 1. Obtener productos financieros
+### 2. Crear producto financiero
 - **URL:** `/bp/products`  
-- **Método:** `GET`  
-- **Ejemplo de respuesta:**
-
-```markdown
+- **Método:** `POST`
+- Body de ejemplo:
+```json
 {
-  "data": [
-    {
-      "id": "uno",
-      "name": "Nombre producto",
-      "description": "Descripción producto",
-      "logo": "assets-1.png",
-      "date_release": "2025-01-01",
-      "date_revision": "2025-01-01"
-    }
-  ]
+  "id": "dos",
+  "name": "Nombre producto",
+  "description": "Descripción producto",
+  "logo": "assets-1.png",
+  "date_release": "2025-01-01",
+  "date_revision": "2025-01-01"
 }
+```
+- **Ejemplo de respuesta:**
+```json
+{
+  "message": "Product added successfully",
+  "data": {
+    "id": "dos",
+    "name": "Nombre producto",
+    "description": "Descripción producto",
+    "logo": "assets-1.png",
+    "date_release": "2025-01-01",
+    "date_revision": "2025-01-01"
+  }
+}
+```
+
+### 3. Actualizar producto financiero
+- **URL:** `/bp/products/:id`  
+- **Método:** `PUT`  
+- Body de ejemplo:
+```json
+{
+  "name": "Nombre actualizado",
+  "description": "Descripción producto",
+  "logo": "assets-1.png",
+  "date_release": "2025-01-01",
+  "date_revision": "2025-01-01"
+}
+```
+- **Ejemplo de respuesta:**
+```json
+{
+  "message": "Product updated successfully",
+  "data": {
+    "name": "Nombre actualizado",
+    "description": "Descripción producto",
+    "logo": "assets-1.png",
+    "date_release": "2025-01-01",
+    "date_revision": "2025-01-01"
+  }
+}
+```
+
+### 4. Eliminar producto financiero
+- **URL:** `/bp/products/:id`  
+- **Método:** `DELETE`  
+- **Ejemplo de respuesta:**
+```json
+{
+  "message": "Product removed successfully"
+}
+```
+
+
